@@ -2,33 +2,57 @@
 /**
  * Created by PhpStorm.
  * User: xiaowenzi
- * Date: 2018/4/2
- * Time: 11:16
+ * Date: 2018/4/3
+ * Time: 11:23
  */
-
 /**
- * 问题
- * 假设有一个关于个人事务管理的项目，其功能之一是管理Appointment对象
- * 我们的业务团队和另一个公司建立了关系，目前需要用一个叫做BloggsCal的格式
- * 和他们交流预约相关的数据。而且业务团队提醒我们将来可能要面对更多的数据格式
- *
- * 1、在代码运行时我们才知道要生成的对象类型；（BolggsApptEncoder或MegaApptEncoder）
- * 2、我们需要能够相对轻松的加入一些新的产品类型；（如一种新业务处理方式SyncML）
- * 3、每一个产品类型都可制定特定的功能。（如getHeaderText()和getFooterText()）
+ * 使用工厂来产生一组相关的类
+ */
+/**
+ * 加入待办事宜和联系人
  */
 
-
+//预约、待办事宜和联系人的编码
 abstract class ApptEncoder
 {
     abstract function encode();
 }
 
+abstract class ThdEncoder
+{
+    abstract function encode();
+}
+
+abstract class ContactEncoder
+{
+    abstract function encode();
+}
+
+//不同编码的实现
 class BloggsApptEncoder extends ApptEncoder
 {
     function encode()
     {
         // TODO: Implement encode() method.
         return "Appointment data encode in BloggsCal format\n";
+    }
+}
+
+class BloggsThdEncoder extends ThdEncoder
+{
+    function encode()
+    {
+        // TODO: Implement encode() method.
+        return "Thd data encode in BloggsCal format\n";
+    }
+}
+
+class BloggsContactEncoder extends ContactEncoder
+{
+    function encode()
+    {
+        // TODO: Implement encode() method.
+        return "Contact data encode in BloggsCal format\n";
     }
 }
 
@@ -40,8 +64,27 @@ class MegaApptEncoder extends ApptEncoder{
     }
 }
 
+class MegaThdEncoder extends ThdEncoder{
+    function encode()
+    {
+        // TODO: Implement encode() method.
+        return "Thd data encode in MegaCal format\n";
+    }
+}
+
+class MegaContactEncoder extends ContactEncoder{
+    function encode()
+    {
+        // TODO: Implement encode() method.
+        return "Contact data encode in MegaCal format\n";
+    }
+}
+
+//得到编码对象
 abstract class CommsManager{
     abstract function getHeaderText();
+    abstract function getThdEncoder();
+    abstract function getContactEncoder();
     abstract function getApptEncoder();
     abstract function getFooterText();
 }
@@ -57,6 +100,16 @@ class BloggsCommsManager extends CommsManager{
     {
         // TODO: Implement getApptEncoder() method.
         return new BloggsApptEncoder();
+    }
+
+    function getThdEncoder()
+    {
+        return new BloggsThdEncoder();
+    }
+
+    function getContactEncoder()
+    {
+        return new BloggsContactEncoder();
     }
 
     function getFooterText()
@@ -77,6 +130,16 @@ class MegaCommsManager extends CommsManager{
     {
         // TODO: Implement getApptEncoder() method.
         return new MegaApptEncoder();
+    }
+
+    function getThdEncoder()
+    {
+        return new MegaThdEncoder();
+    }
+
+    function getContactEncoder()
+    {
+        return new MegaContactEncoder();
     }
 
     function getFooterText()
